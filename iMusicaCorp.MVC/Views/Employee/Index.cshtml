@@ -1,0 +1,93 @@
+﻿@model IEnumerable<iMusicaCorp.Application.ViewModels.EmployeeViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@section style
+{
+    <link href="~/Scripts/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table id="table"
+       data-toggle="table"
+       data-search='true'
+       data-checkbox-header="false"
+       data-url="@Url.Action("GetGridData", "Employee")"
+       data-side-pagination="server"
+       data-pagination="true"
+       data-locale='pt-BR'
+       class="table"
+       data-page-size='10'
+       data-page-list="[10, 20, 50, 100, 200]">
+    <thead>
+        <tr>
+            <th data-field="Id">Id</th>
+            <th data-field="Nome">Nome</th>
+            <th data-field="Sexo">Sexo</th>
+            <th data-field="DataNascimento">Data de nascimento</th>
+            <th data-field="Cargo">Cargo</th>
+            <th data-field="QtdDependentes">Quantidade de Dependentes</th>
+            <th data-field="button" class="tdMinimo" data-formatter="buttonFormatter" data-events="buttonEvents" data-halign="center" data-align="center"></th>
+        </tr>
+    </thead>
+</table>
+
+
+@section scripts
+{
+    <script src="~/Scripts/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="~/Scripts/bootstrap-table/bootstrap-table-locale-all.min.js"></script>
+    <script src="~/Scripts/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="~/Scripts/tableExport.js"></script>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            var $table = $('#table');
+            $table.bootstrapTable();
+        });
+
+        function buttonFormatter(value, row, index) {
+            return [
+                '<a class="btn btn-danger fa fa-trash-o btn-flat btn-sm pull-right">',
+                '</a>',
+                '<a class="btn btn-primary fa fa-edit btn-flat btn-sm pull-right">',
+                '</a>'
+            ].join('');
+        }
+
+        window.buttonEvents = {
+            'click .fa-trash-o': function (e, value, row, index) {
+                window.location.href = '@Url.Action("Delete", "Employee")/' + row.Id;
+            },
+            'click .fa-edit': function (e, value, row, index) {
+                window.location.href = '@Url.Action("Edit", "Employee")/' + row.Id;
+            }
+        };
+
+        function AtivoFormatter(value, row, index) {
+            if (row.Ativo) {
+                return {
+                    disabled: true,
+                    checked: true
+                };
+            } else {
+                return {
+                    disabled: true,
+                }
+            }
+        }
+
+    </script>
+}

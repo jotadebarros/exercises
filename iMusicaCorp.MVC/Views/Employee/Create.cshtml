@@ -1,0 +1,235 @@
+﻿@model iMusicaCorp.Application.ViewModels.EmployeeViewModel
+@{
+    ViewBag.Title = "Create";
+    ViewBag.SubTitle = "Employee";
+}
+@section style
+{
+    <link href="~/Scripts/bootstrap-datepicker-1.6.4/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/Scripts/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/Scripts/bootstrap-table/extensions/x-editable/css/bootstrap-editable.css" rel="stylesheet" />
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">@ViewBag.SubTitle</h3>
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                <h4>Create Employee</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Birth, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Birth, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                        @Html.ValidationMessageFor(model => model.Birth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("RoleId", (IEnumerable<SelectListItem>)ViewBag.Role, "Selecione...", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Gender, new { @class = "control-label col-md-2" })
+                    <span class=" col-md-10">
+                        @Html.RadioButtonFor(m => m.Gender, "M", new { @class = "radio-inline" })
+                        @Html.Label("Masculino", new { @class = "control-label" })
+                        @Html.RadioButtonFor(m => m.Gender, "F", new { @class = "radio-inline" })
+                        @Html.Label("Feminino", new { @class = "control-label" })
+                    </span>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="toolbarDependente">
+                                <label>Dependente</label>
+                                <input type="text" id="txtdep" />
+                                <a href="#" id="button" class="btn btn-success" onclick="AddDependents(); return false;">Incluir Dependente</a>
+                                <a href="#" id="button" class="btn btn-danger" onclick="RemoveDependents(); return false;">Remover Dependente</a>
+                            </div>
+                            <table id="tblDependente"
+                                   data-toggle="table"
+                                   data-search='true'
+                                   data-sort-name='id'
+                                   data-page-list='[5, 10, 20]'
+                                   data-page-size='5'
+                                   data-pagination='true'
+                                   data-show-pagination-switch='true'
+                                   data-locale='pt-BR'
+                                   data-maintain-selected='true'
+                                   data-toolbar="#toolbarDependente"
+                                   data-unique-id="Nome"
+                                   data-click-to-select="true"
+                                   class="table">
+                                <thead>
+                                    <tr>
+                                        <th data-field="state" data-checkbox="true"></th>
+                                        <th data-field="Id" class='hidden'>ID</th>
+                                        <th data-field="Nome" data-editable="true">Nome</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="panel-footer text-right">
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-3">
+                    <button class="btn btn-info btn-labeled fa fa-floppy-o fa-lg" type="submit">Salvar</button>
+                    <button class="btn btn-warning btn-labeled fa fa-undo fa-lg " type="button" onclick=" location.href='@Url.Action("Index", "Employee")' ">Voltar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script src="~/Scripts/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="~/Scripts/bootstrap-table/bootstrap-table-locale-all.min.js"></script>
+    <script src="~/Scripts/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="~/Scripts/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
+    <script src="~/Scripts/bootstrap-table/extensions/x-editable/js/bootstrap-editable.min.js"></script>
+    <script src="~/Scripts/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/Scripts/tableExport.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datepicker();
+            var $table = $('#tblDependente');
+            $table.bootstrapTable();
+
+
+            $("form").submit(function () {
+                var $table = $('#tblDependente');
+
+                var deps = $table.bootstrapTable('getData');
+
+                $.ajax({
+                    url: "@Url.Action("UpdateDependents", "Employee")",
+                    type: "POST",
+                    data: JSON.stringify({ dtos: deps }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    traditional: true,
+                    error: function (xhr, errStatus, errorThrown) {
+                        $("#processing-modal").modal('hide');
+                        var err = JSON.parse(xhr.responseText);
+                        showNotification(4, err.Message, 'page', false);
+                    }
+                });
+            });
+
+
+
+        });
+
+
+
+        function RemoveDependents() {
+            var $table = $('#tblDependente');
+
+            var nomes = $.map($table.bootstrapTable('getSelections'), function (row) {
+                return row.Nome;
+            });
+
+            $.ajax({
+                url: '@Url.Action("RemoveDependents", "Employee")',
+                type: "POST",
+                data: JSON.stringify({ nomes: nomes }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                async: false,
+                traditional: true,
+                beforeSend: function () { },
+                success: function (data) {
+
+                    $('#tblDependente').bootstrapTable('load', data);
+
+                },
+                error: function (xhr, errStatus, errorThrown) {
+                    var err = JSON.parse(xhr.responseText);
+                    alert(err.Message);
+                }
+            });
+        }
+
+
+        function AddDependents() {
+
+            var nmDependente = $("#txtdep").val();
+
+
+            var jaExiste = $('#tblDependente').bootstrapTable('getRowByUniqueId', nmDependente);
+
+
+            if (!isNullOrEmpty(nmDependente)) {
+                if (isNullOrEmpty(jaExiste)) {
+
+                    $.ajax({
+                        url: '@Url.Action("AddDependents", "Employee")',
+                        type: "POST",
+                        data: JSON.stringify({ nome: nmDependente }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        cache: false,
+                        traditional: true,
+                        beforeSend: function () { },
+                        success: function (data) {
+
+                            $('#tblDependente').bootstrapTable('load', data);
+
+                        },
+                        error: function (xhr, errStatus, errorThrown) {
+                            var err = JSON.parse(xhr.responseText);
+                            alert(err.Message);
+                        }
+                    });
+                } else {
+                    alert("Dependente já foi incluido");
+                }
+
+            } else {
+
+                alert("Informe o Nome do Dependente");
+            }
+        }
+
+        function isNullOrEmpty(s) {
+            return s === undefined || s === null || s === '';
+        }
+
+    </script>
+}
