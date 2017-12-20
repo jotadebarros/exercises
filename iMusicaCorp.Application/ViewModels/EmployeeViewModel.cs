@@ -29,7 +29,7 @@ namespace iMusicaCorp.Application.ViewModels
         [Required(ErrorMessage = "Preencha o campo Genero")]
         [DisplayName("Gênero")]
         public string Gender { get; set; }
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [Required(ErrorMessage = "Preencha o Data Nascimento")]
         //[DataType(DataType.Date)]
         public DateTime Birth { get; set; }
