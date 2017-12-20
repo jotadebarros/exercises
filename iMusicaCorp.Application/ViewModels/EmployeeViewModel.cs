@@ -34,7 +34,7 @@ namespace iMusicaCorp.Application.ViewModels
         //[DataType(DataType.Date)]
         public DateTime Birth { get; set; }
 
-        [Required(ErrorMessage = "Preencha o campo Genero")]
+        [Required(ErrorMessage = "Preencha o campo Cargo")]
         [DisplayName("Cargo")]
         public int RoleId { get; set; }
         public virtual RoleViewModel Role { get; set; }
