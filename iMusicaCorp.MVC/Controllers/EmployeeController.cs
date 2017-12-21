@@ -120,9 +120,15 @@ namespace iMusicaCorp.MVC.Controllers
                         }
                     }
 
+                    ViewBag.role = new SelectList(_roleAppService.GetAll(), "RoleId", "Name", model.RoleId);
+
                     _employeeAppService.Update(model);
 
                     return RedirectToAction("Index");
+                }
+                else
+                {
+                    ViewBag.role = new SelectList(_roleAppService.GetAll(), "RoleId", "Name");
                 }
 
 

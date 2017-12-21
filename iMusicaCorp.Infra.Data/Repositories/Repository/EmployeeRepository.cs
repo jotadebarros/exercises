@@ -20,9 +20,6 @@ namespace iMusicaCorp.Infra.Data.Repositories.Repository
 
         public override void Update(Employee obj)
         {
-            Db.Entry(obj).State = EntityState.Detached;
-
-
             foreach (var dependent in obj.Dependents)
             {
                 if (dependent.DependentId == 0)
@@ -35,13 +32,9 @@ namespace iMusicaCorp.Infra.Data.Repositories.Repository
                 }
             }
 
-
             Db.Dependents.RemoveRange(obj.Dependents.Where(x => x.Excluido));
-            
 
-         
             Db.Entry(obj).State = EntityState.Modified;
-            Db.Employees.Attach(obj);
         }
     }
 }

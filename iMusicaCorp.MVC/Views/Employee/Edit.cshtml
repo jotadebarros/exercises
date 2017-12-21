@@ -118,11 +118,15 @@
     <script src="~/Scripts/bootstrap-table/extensions/x-editable/js/bootstrap-editable.min.js"></script>
     <script src="~/Scripts/tableExport.js"></script>
     <script src="~/Scripts/bootstrap-datepicker-1.6.4/js/bootstrap-datepicker.min.js"></script>
-
+    <script src="~/Scripts/bootstrap-datepicker-1.6.4/locales/bootstrap-datepicker.pt-BR.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            $('.datepicker').datepicker();
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'pt-BR'
+            });
+
             var $table = $('#tblDependente');
             $table.bootstrapTable();
             PopularTabelaDependentes();
